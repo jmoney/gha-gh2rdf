@@ -1,0 +1,19 @@
+name: 'gh2rdf'
+description: 'Github to RDF'
+inputs:
+  owner:
+    description: 'Owner of the repository'
+    required: true
+  repo:
+    description: 'Repository name'
+    required: true
+  output:
+    description: 'Output file'
+    required: true
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.owner }}
+    - ${{ inputs.repo }}
+    - ${{ inputs.output }}
