@@ -22,7 +22,6 @@ if __name__ == "__main__":
     g.bind("", default_ns)
     issues = api.issues.list_for_repo(state="all")
     for issue in issues:
-        print(issue)
         iri = rdflib.URIRef(default_ns[str(issue.number)])
         g.add((iri, rdflib.RDF.type, rdflib.URIRef(GITHUB_NS.Issue)))
         g.add((iri, GITHUB_NS.issue_number, rdflib.Literal(issue.number)))
