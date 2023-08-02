@@ -20,21 +20,32 @@ if __name__ == "__main__":
     g = rdflib.Graph()
     g.bind("github", GITHUB_NS)
     g.bind("", default_ns)
-    issues = api.issues.list_for_repo(state="all")
-    for issue in issues:
-        if "pull_request" in issue:
-            continue
-        iri = rdflib.URIRef(default_ns[str(issue.number)])
-        g.add((iri, rdflib.RDF.type, rdflib.URIRef(GITHUB_NS.Issue)))
-        g.add((iri, GITHUB_NS.issue_number, rdflib.Literal(issue.number)))
-        g.add((iri, GITHUB_NS.url, rdflib.Literal(issue.html_url)))
-        g.add((iri, GITHUB_NS.title, rdflib.Literal(issue.title)))
-        g.add((iri, GITHUB_NS.state, rdflib.Literal(issue.state)))
-        for assignee in issue.assignees:
-            g.add((iri, GITHUB_NS.assignee, rdflib.Literal(assignee.login)))
-        g.add((iri, GITHUB_NS.created_at, rdflib.Literal(issue.created_at, datatype=rdflib.XSD.dateTime)))
-        g.add((iri, GITHUB_NS.updated_at, rdflib.Literal(issue.updated_at, datatype=rdflib.XSD.dateTime)))
-        if issue.closed_at:
-            g.add((iri, GITHUB_NS.closed_at, rdflib.Literal(issue.closed_at, datatype=rdflib.XSD.dateTime)))
+
+    current_page = 1
+    while True:
+        issues = api.issues.list_for_repo(state="all", per_page=100, page=current_page)
+        if len(issues) == 0:
+            break
+
+        print(current_page)
+
+        for issue in issues:
+            if "pull_request" in issue:
+                continue
+
+            iri = rdflib.URIRef(default_ns[str(issue.number)])
+            g.add((iri, rdflib.RDF.type, rdflib.URIRef(GITHUB_NS.Issue)))
+            g.add((iri, GITHUB_NS.issue_number, rdflib.Literal(issue.number)))
+            g.add((iri, GITHUB_NS.url, rdflib.Literal(issue.html_url)))
+            g.add((iri, GITHUB_NS.title, rdflib.Literal(issue.title)))
+            g.add((iri, GITHUB_NS.state, rdflib.Literal(issue.state)))
+            for assignee in issue.assignees:
+                g.add((iri, GITHUB_NS.assignee, rdflib.Literal(assignee.login)))
+            g.add((iri, GITHUB_NS.created_at, rdflib.Literal(issue.created_at, datatype=rdflib.XSD.dateTime)))
+            g.add((iri, GITHUB_NS.updated_at, rdflib.Literal(issue.updated_at, datatype=rdflib.XSD.dateTime)))
+            if issue.closed_at:
+                g.add((iri, GITHUB_NS.closed_at, rdflib.Literal(issue.closed_at, datatype=rdflib.XSD.dateTime)))
+
+        current_page += 1
 
     print(g.serialize(format=args.format))
