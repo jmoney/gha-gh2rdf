@@ -1,4 +1,6 @@
 import argparse
+import datetime
+import dateutil.parser
 import rdflib
 
 from ghapi.all import GhApi
@@ -32,6 +34,10 @@ if __name__ == "__main__":
                 continue
 
             iri = rdflib.URIRef(default_ns[str(issue.number)])
+            
+            iso_created_at = dateutil.parser.isoparse(issue.created_at)
+            iso_updated_at = dateutil.parser.isoparse(issue.updated_at)
+            iso_closed_at = dateutil.parser.isoparse(issue.closed_at) if issue.closed_at else None
             g.add((iri, rdflib.RDF.type, rdflib.URIRef(GITHUB_NS.Issue)))
             g.add((iri, GITHUB_NS.issue_number, rdflib.Literal(issue.number)))
             g.add((iri, GITHUB_NS.url, rdflib.Literal(issue.html_url)))
@@ -40,9 +46,12 @@ if __name__ == "__main__":
             for assignee in issue.assignees:
                 g.add((iri, GITHUB_NS.assignee, rdflib.Literal(assignee.login)))
             g.add((iri, GITHUB_NS.created_at, rdflib.Literal(issue.created_at, datatype=rdflib.XSD.dateTime)))
+            g.add((iri, GITHUB_NS.created_on, rdflib.Literal(iso_created_at.date(), datatype=rdflib.XSD.date)))
             g.add((iri, GITHUB_NS.updated_at, rdflib.Literal(issue.updated_at, datatype=rdflib.XSD.dateTime)))
+            g.add((iri, GITHUB_NS.updated_on, rdflib.Literal(iso_updated_at.date(), datatype=rdflib.XSD.date)))
             if issue.closed_at:
                 g.add((iri, GITHUB_NS.closed_at, rdflib.Literal(issue.closed_at, datatype=rdflib.XSD.dateTime)))
+                g.add((iri, GITHUB_NS.closed_on, rdflib.Literal(iso_closed_at.date(), datatype=rdflib.XSD.date)))
 
         current_page += 1
 
