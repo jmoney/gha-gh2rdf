@@ -27,8 +27,6 @@ if __name__ == "__main__":
         if len(issues) == 0:
             break
 
-        print(current_page)
-
         for issue in issues:
             if "pull_request" in issue:
                 continue
