@@ -80,7 +80,7 @@ def pull_requests(g: rdflib.Graph, owner: str, org: str):
                 iso_created_at = dateutil.parser.isoparse(pull.created_at)
                 iso_updated_at = dateutil.parser.isoparse(pull.updated_at)
                 iso_closed_at = dateutil.parser.isoparse(pull.closed_at) if pull.closed_at else None
-                g.add((iri, rdflib.RDF.type, rdflib.URIRef(GITHUB_NS.Issue)))
+                g.add((iri, rdflib.RDF.type, rdflib.URIRef(GITHUB_NS.PullRequest)))
                 g.add((iri, GITHUB_NS.pull_number, rdflib.Literal(pull.number)))
                 g.add((iri, GITHUB_NS.url, rdflib.Literal(pull.html_url)))
                 g.add((iri, GITHUB_NS.title, rdflib.Literal(pull.title)))
