@@ -119,6 +119,6 @@ if __name__ == "__main__":
     if args.issues:
         issues(g, args.owner, args.repo)
     elif args.pull_requests:
-        pull_requests(g, owner=args.owner, org='datadotworld')
+        pull_requests(g, owner=args.owner, org=args.org)
 
     print(g.serialize(format=args.format))
