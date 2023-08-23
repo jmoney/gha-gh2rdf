@@ -2,11 +2,17 @@ name: 'gh2rdf'
 description: 'Github to RDF'
 inputs:
   owner:
-    description: 'Owner of the repository'
+    description: 'Owner'
     required: true
   repo:
     description: 'Repository name'
-    required: true
+    required: false
+  type:
+    description: 'Issues or pull-requests'
+    required: false
+  org:
+    description: 'If type of pull-requests is set then the organization to limit the collecting too'
+    required: false
   output:
     description: 'Output file'
     required: true
@@ -16,4 +22,6 @@ runs:
   args:
     - ${{ inputs.owner }}
     - ${{ inputs.repo }}
+    - ${{ inputs.type }}
+    - ${{ inputs.org }}
     - ${{ inputs.output }}
