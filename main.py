@@ -83,7 +83,7 @@ def pull_requests(g: rdflib.Graph, owner: str, org: str):
                 iso_merged_at = dateutil.parser.isoparse(pull.pull_request.merged_at) if pull.pull_request.merged_at else None
                 g.add((iri, rdflib.RDF.type, rdflib.URIRef(GITHUB_NS.PullRequest)))
                 g.add((iri, GITHUB_NS.pull_number, rdflib.Literal(pull.number)))
-                g.add((iri, GITHUB_NS.repo, rdflib.Literal(pull.repository_url.split("/")[-2:].join("/"))))
+                g.add((iri, GITHUB_NS.repo, rdflib.Literal("/".join(pull.repository_url.split("/")[-2:]))))
                 g.add((iri, GITHUB_NS.url, rdflib.Literal(pull.html_url)))
                 g.add((iri, GITHUB_NS.title, rdflib.Literal(pull.title)))
                 g.add((iri, GITHUB_NS.state, rdflib.Literal(pull.state)))
