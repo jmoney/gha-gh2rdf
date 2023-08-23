@@ -85,7 +85,7 @@ def pull_requests(g: rdflib.Graph, owner: str, org: str):
                 g.add((iri, GITHUB_NS.title, rdflib.Literal(pull.title)))
                 g.add((iri, GITHUB_NS.state, rdflib.Literal(pull.state)))
                 g.add((iri, GITHUB_NS.state_reason, rdflib.Literal(pull.state_reason)))
-                g.add((iri, GITHUB_NS.merged, rdflib.Literal(pull.pull_request.merged_at is not None, datatype=rdflib.XSD.boolean)))
+                g.add((iri, GITHUB_NS.merged, rdflib.Literal(pull.pull_request.merged_at is not None)))
                 if pull.pull_request.merged_at is not None:
                     g.add((iri, GITHUB_NS.merged_at, rdflib.Literal(pull.pull_request.merged_at, datatype=rdflib.XSD.dateTime)))
                     g.add((iri, GITHUB_NS.merged_on, rdflib.Literal(iso_merged_at.date(), datatype=rdflib.XSD.date)))
