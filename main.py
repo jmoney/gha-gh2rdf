@@ -104,6 +104,7 @@ if __name__ == "__main__":
     prog = argparse.ArgumentParser()
     prog.add_argument("--owner", type=str, required=False, help="Owner of the repo", dest="owner")
     prog.add_argument("--repo", type=str, required=False, help="Name of the repo", dest="repo")
+    prog.add_argument("--org", type=str, required=False, help="Name of the org", dest="org")
     prog.add_argument("--format", type=str, required=False, default="turtle", help="Format of the output", dest="format")
 
     type_group = prog.add_mutually_exclusive_group(required=True)
