@@ -51,9 +51,6 @@ def pull_requests(g: rdflib.Graph, owner: str, org: str):
     api = GhApi(owner=owner)
     # print(api.full_docs())
 
-    default_ns = rdflib.Namespace(f"https://github.com/{owner}/pulls/")
-    g.bind("", default_ns)
-
     current_page = 1
     search_strings = {
         "created": f"is:pr archived:false user:{org} author:{owner} ",
@@ -73,7 +70,7 @@ def pull_requests(g: rdflib.Graph, owner: str, org: str):
 
             for pull in pulls['items']:
 
-                iri = rdflib.URIRef(default_ns[str(pull.number)])
+                iri = rdflib.URIRef(pull.html_url)
                 g.add((iri, GITHUB_NS.search_string, rdflib.Literal(search_string)))
                 g.add((iri, GITHUB_NS.search_type, rdflib.Literal(type)))
                 
