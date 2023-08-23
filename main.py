@@ -80,12 +80,17 @@ def pull_requests(g: rdflib.Graph, owner: str, org: str):
                 iso_created_at = dateutil.parser.isoparse(pull.created_at)
                 iso_updated_at = dateutil.parser.isoparse(pull.updated_at)
                 iso_closed_at = dateutil.parser.isoparse(pull.closed_at) if pull.closed_at else None
+                iso_merged_at = dateutil.parser.isoparse(pull.pull_request.merged_at) if pull.pull_request.merged_at else None
                 g.add((iri, rdflib.RDF.type, rdflib.URIRef(GITHUB_NS.PullRequest)))
                 g.add((iri, GITHUB_NS.pull_number, rdflib.Literal(pull.number)))
+                g.add((iri, GITHUB_NS.repo, rdflib.Literal(pull.repository_url.split("/")[-2:].join("/"))))
                 g.add((iri, GITHUB_NS.url, rdflib.Literal(pull.html_url)))
                 g.add((iri, GITHUB_NS.title, rdflib.Literal(pull.title)))
                 g.add((iri, GITHUB_NS.state, rdflib.Literal(pull.state)))
                 g.add((iri, GITHUB_NS.state_reason, rdflib.Literal(pull.state_reason)))
+                g.add((iri, GITHUB_NS.merged, rdflib.Literal(pull.pull_request.merged_at is not None, datatype=rdflib.XSD.boolean)))
+                g.add((iri, GITHUB_NS.merged_at, rdflib.Literal(pull.pull_request.merged_at, datatype=rdflib.XSD.dateTime)))
+                g.add((iri, GITHUB_NS.merged_on, rdflib.Literal(iso_merged_at.date(), datatype=rdflib.XSD.date)))
                 for assignee in pull.assignees:
                     g.add((iri, GITHUB_NS.assignee, rdflib.Literal(assignee.login)))
                 g.add((iri, GITHUB_NS.created_at, rdflib.Literal(pull.created_at, datatype=rdflib.XSD.dateTime)))
