@@ -98,6 +98,9 @@ def pull_requests(g: rdflib.Graph, owner: str, org: str):
                 if pull.closed_at:
                     g.add((iri, GITHUB_NS.closed_at, rdflib.Literal(pull.closed_at, datatype=rdflib.XSD.dateTime)))
                     g.add((iri, GITHUB_NS.closed_on, rdflib.Literal(iso_closed_at.date(), datatype=rdflib.XSD.date)))
+                if pull.labels:
+                    for label in pull.labels:
+                        g.add((iri, GITHUB_NS.label, rdflib.Literal(label.name)))
 
             current_page += 1
         time.sleep(60)
