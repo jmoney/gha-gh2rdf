@@ -70,6 +70,11 @@ def pull_requests(g: rdflib.Graph, owner: str, org: str):
 
             for pull in pulls['items']:
 
+                pr = api.pulls.get(pull.number)
+                if pr is None:
+                    print(f"Failed to get PR {pull.number}")
+                    continue
+
                 iri = rdflib.URIRef(pull.html_url)
                 g.add((iri, GITHUB_NS.search_string, rdflib.Literal(search_string)))
                 g.add((iri, GITHUB_NS.search_type, rdflib.Literal(type)))
@@ -85,6 +90,7 @@ def pull_requests(g: rdflib.Graph, owner: str, org: str):
                 g.add((iri, GITHUB_NS.title, rdflib.Literal(pull.title)))
                 g.add((iri, GITHUB_NS.state, rdflib.Literal(pull.state)))
                 g.add((iri, GITHUB_NS.state_reason, rdflib.Literal(pull.state_reason)))
+                g.add((iri, GITHUB_NS.draft, rdflib.Literal(pr.draft)))
                 g.add((iri, GITHUB_NS.merged, rdflib.Literal(pull.pull_request.merged_at is not None)))
                 if pull.pull_request.merged_at is not None:
                     g.add((iri, GITHUB_NS.merged_at, rdflib.Literal(pull.pull_request.merged_at, datatype=rdflib.XSD.dateTime)))
