@@ -70,6 +70,7 @@ def pull_requests(g: rdflib.Graph, owner: str, org: str):
 
             for pull in pulls['items']:
 
+                print(pull.repository_url.rstrip('/').split('/')[-1])
                 pr = api.pulls.get(repo=pull.repository_url.rstrip('/').split('/')[-1], pull_number=pull.number)
                 if pr is None:
                     print(f"Failed to get PR {pull.number}")
