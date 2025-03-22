@@ -48,7 +48,7 @@ def issues(g: rdflib.Graph, owner: str, repo: str):
         current_page += 1
 
 def pull_requests(g: rdflib.Graph, owner: str, org: str):
-    api = GhApi(owner=owner)
+    api = GhApi()
     # print(api.full_docs())
 
     current_page = 1
@@ -70,10 +70,10 @@ def pull_requests(g: rdflib.Graph, owner: str, org: str):
 
             for pull in pulls['items']:
 
-                print(pull.repository_url.rstrip('/').split('/')[-1].rstrip(), file=sys.stderr)
-                pr = api.pulls.get(repo=pull.repository_url.rstrip('/').split('/')[-1].rstrip(), pull_number=pull.number)
+                org_repo = pull.repository_url.split("/")[-2:]
+                pr = api.pulls.get(owner=org_repo[0], repo=org_repo[1], pull_number=pull.number)
                 if pr is None:
-                    print(f"Failed to get PR {pull.number}")
+                    print(f"Failed to get PR {org_repo[0]}/{org_repo[1]}/pulls/{pull.number}")
                     continue
 
                 iri = rdflib.URIRef(pull.html_url)
