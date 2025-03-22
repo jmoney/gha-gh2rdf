@@ -47,16 +47,16 @@ def issues(g: rdflib.Graph, owner: str, repo: str):
 
         current_page += 1
 
-def pull_requests(g: rdflib.Graph, owner: str, org: str):
+def pull_requests(g: rdflib.Graph, owner: str, repo: str):
     api = GhApi(owner=owner)
     # print(api.full_docs())
 
     current_page = 1
     search_strings = {
-        "created": f"is:pr archived:false user:{org} author:{owner} ",
-        "assigned": f"is:pr archived:false user:{org} assignee:{owner}",
-        "mentioned": f"is:pr archived:false user:{org} mentioned:{owner}",
-        "review-requested": f"is:pr archived:false user:{org} review-requested:{owner}",
+        "created": f"is:pr archived:false user:{repo} author:{owner} ",
+        "assigned": f"is:pr archived:false user:{repo} assignee:{owner}",
+        "mentioned": f"is:pr archived:false user:{repo} mentioned:{owner}",
+        "review-requested": f"is:pr archived:false user:{repo} review-requested:{owner}",
     }
     for type, search_string in search_strings.items():
         current_page = 1
@@ -114,10 +114,9 @@ def pull_requests(g: rdflib.Graph, owner: str, org: str):
 if __name__ == "__main__":
 
     prog = argparse.ArgumentParser()
-    prog.add_argument("--owner", type=str, required=False, help="Owner of the repo", dest="owner")
-    prog.add_argument("--repo", type=str, required=False, help="Name of the repo", dest="repo")
-    prog.add_argument("--org", type=str, required=False, help="Name of the org", dest="org")
-    prog.add_argument("--format", type=str, required=False, default="turtle", help="Format of the output", dest="format")
+    prog.add_argument("--owner", type=str, required=False, help="Owner of the repo/org.", dest="owner")
+    prog.add_argument("--repo", type=str, required=False, help="Name of the repo.  Used in the context of issues.", dest="repo")
+    prog.add_argument("--format", type=str, required=False, default="turtle", help="Format of the output. Default is turtle.  Options are xml, n3, turtle, nt, pretty-xml, trix, trig, nquads, json-ld, and hex.", dest="format")
 
     type_group = prog.add_mutually_exclusive_group(required=True)
     type_group.add_argument("--issues", action="store_true", help="Include issues", dest="issues")
