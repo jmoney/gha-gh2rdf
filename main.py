@@ -1,8 +1,8 @@
 import argparse
-import datetime
 import dateutil.parser
 import rdflib
 import time
+import sys
 
 from ghapi.all import GhApi
 
@@ -73,7 +73,7 @@ def pull_requests(g: rdflib.Graph, owner: str, org: str):
                 print(pull.repository_url.rstrip('/').split('/')[-1])
                 pr = api.pulls.get(repo=pull.repository_url.rstrip('/').split('/')[-1], pull_number=pull.number)
                 if pr is None:
-                    print(f"Failed to get PR {pull.number}")
+                    print(f"Failed to get PR {pull.number}", file=sys.stderr, )
                     continue
 
                 iri = rdflib.URIRef(pull.html_url)
