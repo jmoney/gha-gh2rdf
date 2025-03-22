@@ -70,10 +70,10 @@ def pull_requests(g: rdflib.Graph, owner: str, org: str):
 
             for pull in pulls['items']:
 
-                print(pull.repository_url.rstrip('/').split('/')[-1])
+                print(pull.repository_url.rstrip('/').split('/')[-1], file=sys.stderr)
                 pr = api.pulls.get(repo=pull.repository_url.rstrip('/').split('/')[-1], pull_number=pull.number)
                 if pr is None:
-                    print(f"Failed to get PR {pull.number}", file=sys.stderr, )
+                    print(f"Failed to get PR {pull.number}")
                     continue
 
                 iri = rdflib.URIRef(pull.html_url)
